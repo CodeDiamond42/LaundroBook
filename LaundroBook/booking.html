@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Book a Wash | LaundroBook</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<!-- CSS -->
+<link rel="stylesheet" href="CSS/style.css">
+
+</head>
+
+<body>
+
+<!-- Header -->
+
+<header>
+
+<div class="container header-container">
+
+<a href="index.html" class="logo"> <i class="fa-solid fa-shirt"></i>
+
+<div class="logo-text">
+    Laundro<span>Book</span>
+</div>
+
+</a>
+
+<nav>
+
+<ul>
+
+<li><a href="index.html">Home</a></li> <li><a href="about.html">About</a></li> <li><a href="contact.html">Contact</a></li>
+
+</ul>
+
+</nav>
+
+<div class="nav-buttons">
+
+<a href="TrackingDel.html" class="btn btn-secondary">
+
+Track Delivery
+
+</a>
+
+<a href="TrackingPick.html" class="btn btn-primary">
+
+Track Pickup
+
+</a>
+
+</div>
+
+</div>
+
+</header>
+
+<!-- Booking Section -->
+
+<section class="booking-section">
+
+<div class="container">
+
+<div class="section-header">
+
+<div class="section-subtitle"> Reserve Your Laundry Slot </div>
+
+<h2 class="section-title"> Book Your Washing Machine </h2>
+
+<p class="section-desc">
+
+Reserve your preferred washing machine and select the service that best suits your needs.
+
+</p>
+
+</div>
+
+<!-- Booking Form -->
+
+<!-- PHP: Change action="#" to the PHP processing file. Example: action="process-booking.php" -->
+
+<!-- ==================================================
+
+BACKEND BOOKING PROCESS
+
+1. Validate all booking information.
+
+2. Validate selected branch.
+
+3. Validate booking date.
+
+4. Validate selected time slot.
+
+5. Check machine availability.
+
+6. Validate collection method.
+
+7. Validate delivery address if required.
+
+8. Calculate booking cost.
+
+9. Generate Booking Reference Number.
+
+10. Save booking to database.
+
+11. Send booking confirmation.
+
+12. Redirect customer to booking confirmation page.
+
+================================================== -->
+
+<form action="#" method="POST" class="booking-form">
+
+<!-- Branch Selection -->
+
+<!-- PHP:
+     Retrieve all active laundromat branches
+     from the database.
+
+     Only display branches that are currently
+     accepting bookings.
+-->
+
+<label for="branch">
+
+Select Branch
+
+</label>
+
+<select name="branch" id="branch" required>
+
+<option value="">Select a Branch</option>
+
+<option value="durban"> Durban Branch </option>
+
+<option value="umhlanga"> Musgrave Branch </option>
+
+</select>
+
+
+
+
+<!-- Booking Date -->
+
+<!-- PHP: Validate the selected booking date. Prevent users from selecting unavailable or past dates. -->
+
+<label for="booking_date">
+
+Booking Date
+
+</label>
+
+<input type="date" name="booking_date" id="booking_date" required>
+
+
+
+
+<!-- Time Slot -->
+
+<!-- PHP: Retrieve available time slots based on the selected branch and booking date. Only display available booking times. -->
+
+<label for="booking_time">
+
+Select Time Slot
+
+</label>
+
+<select name="booking_time" id="booking_time" required>
+
+<option value="">Select a Time Slot</option>
+
+<option value="08:00">08:00 AM</option> <option value="09:00">09:00 AM</option> <option value="10:00">10:00 AM</option> <option value="11:00">11:00 AM</option> <option value="12:00">12:00 PM</option>
+
+</select>
+
+
+
+
+<!-- Washing Machine -->
+
+<!-- PHP:
+     Retrieve available washing machines
+     based on:
+
+     - Selected Branch
+     - Selected Date
+     - Selected Time Slot
+
+     Do not display machines that are already booked.
+-->
+
+<label for="machine_number">
+
+Select Washing Machine
+
+</label>
+
+<select name="machine_number" id="machine_number" required>
+
+<option value=""> Select a Machine </option>
+
+<option value="1"> Machine 1 </option>
+
+<option value="2"> Machine 2 </option>
+
+<option value="3"> Machine 3 </option>
+
+</select>
+
+
+
+
+<!-- Laundry Service -->
+
+<!-- PHP: Retrieve available laundry services and their associated pricing if these are stored in the database. -->
+
+<label for="service_type">
+
+Laundry Service
+
+</label>
+
+<select name="service_type" id="service_type" required>
+
+<option value=""> Select a Service </option>
+
+<option value="wash_only"> Wash Only </option>
+
+<option value="wash_and_dry"> Wash and Dry </option>
+
+</select>
+
+
+
+
+<!-- Collection Method -->
+
+<!-- PHP: Validate the selected collection method before processing the booking. -->
+
+<label for="collection_method">
+
+Collection Method
+
+</label>
+
+<select name="collection_method" id="collection_method" required>
+
+<option value=""> Select Collection Method </option>
+
+<option value="pickup"> Self Pickup </option>
+
+<option value="delivery"> Home Delivery </option>
+
+</select>
+<!-- PHP:
+     Only display and validate the delivery address
+     when Collection Method = Home Delivery.
+
+     Store the address with the booking record.
+-->
+<div id="addressSection" class="hidden">
+
+    <label for="address">Delivery Address</label>
+
+  <textarea name="delivery_address"
+          id="address"
+          placeholder="Enter delivery address"></textarea>
+
+</div>
+
+
+<!-- Special Instructions -->
+
+<!-- PHP: Store any special instructions entered by the customer with the booking record. -->
+
+<label for="special_instructions">
+
+Special Instructions (Optional)
+
+</label>
+
+<textarea name="special_instructions" id="special_instructions" rows="5" placeholder="Enter any additional information here."> </textarea>
+
+
+
+
+<!-- Booking Summary -->
+<!-- PHP:
+     Display the customer's selected booking details.
+
+     The summary should be populated using
+     the saved booking record after the booking
+     has been successfully processed.
+-->
+
+<div class="booking-summary">
+
+<h3>Booking Summary</h3>
+
+<div class="summary-item"> <p> <strong>Branch:</strong>
+
+    <!-- PHP: Display the customer's selected branch. -->
+
+    <span id="summary-branch">Not selected</span>
+</p>
+
+</div>
+
+<div class="summary-item"> <p> <strong>Booking Date:</strong>
+
+    <!-- PHP: Display the selected booking date. -->
+
+    <span id="summary-date">Not selected</span>
+</p>
+
+</div>
+
+<div class="summary-item"> <p> <strong>Time Slot:</strong>
+
+    <!-- PHP: Display the selected booking time slot. -->
+
+    <span id="summary-time">Not selected</span>
+</p>
+
+</div>
+
+<div class="summary-item"> <p> <strong>Machine Number:</strong>
+
+    <!-- PHP: Display the selected washing machine. -->
+
+    <span id="summary-machine">Not selected</span>
+</p>
+
+</div>
+
+<div class="summary-item"> <p> <strong>Laundry Service:</strong>
+
+    <!-- PHP: Display the selected laundry service. -->
+
+    <span id="summary-service">Not selected</span>
+</p>
+
+</div>
+
+<div class="summary-item"> <p> <strong>Collection Method:</strong>
+
+    <!-- PHP: Display the selected collection method. -->
+
+    <span id="summary-collection">Not selected</span>
+</p>
+
+</div>
+
+
+
+<div class="summary-item"> <p> <strong>Special Instructions:</strong>
+
+    <!-- PHP: Display any special instructions entered by the customer. -->
+
+    <span id="summary-instructions">None</span>
+</p>
+
+</div>
+
+<div class="summary-price"> <p> <strong>Total Cost:</strong>
+
+   <!-- PHP:
+     Calculate the final booking cost.
+
+     Pricing may depend on:
+     - Laundry Service
+     - Delivery Charges
+     - Promotions
+     - Additional Services
+
+     Display the calculated total.
+-->
+
+    <span id="summary-cost">To be calculated</span>
+</p>
+
+</div>
+
+</div>
+
+<!-- Submit Button -->
+
+<!-- PHP: Validate all booking information before saving the booking to the database and generating a booking confirmation. -->
+
+<button type="submit" id="booking_button" class="btn btn-primary">
+
+Book Now
+
+</button>
+
+</form>
+
+</div>
+
+</section>
+<script>
+
+const collectionMethod =
+document.getElementById("collection_method");
+
+const addressSection =
+document.getElementById("addressSection");
+
+collectionMethod.addEventListener("change", function(){
+
+    if(this.value === "delivery")
+    {
+        addressSection.classList.remove("hidden");
+    }
+    else
+    {
+        addressSection.classList.add("hidden");
+    }
+
+})
+const address =
+document.getElementById("address");
+
+collectionMethod.addEventListener("change", function(){
+
+    if(this.value === "delivery")
+    {
+        addressSection.classList.remove("hidden");
+        address.setAttribute("required", true);
+    }
+    else
+    {
+        addressSection.classList.add("hidden");
+        address.removeAttribute("required");
+    }
+
+});
+;
+
+</script>
+
+</body> </html>
