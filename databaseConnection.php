@@ -2,7 +2,7 @@
     //no access specifier provided
     class Database {
         private $host = 'localhost'; 
-        private $db_name = 'LaundroBook'; 
+        private $db_name = 'laundrobook'; 
         private $username = 'root'; 
         private $password = ''; 
         private $pdo; 
