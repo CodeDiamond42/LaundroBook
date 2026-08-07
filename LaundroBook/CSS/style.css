@@ -1046,3 +1046,84 @@ nav a:hover::after{
     margin:0 auto 25px auto;
 
 }
+/* ========================================= */
+/* CUSTOMER INFORMATION */
+/* ========================================= */
+
+.customer-details{
+
+    background:#FFFFFF;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:12px;
+
+    padding:25px;
+
+    margin-bottom:35px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+
+}
+
+.customer-details h3{
+
+    font-size:24px;
+
+    color:#374151;
+
+    margin-bottom:10px;
+
+}
+
+.customer-details p{
+
+    color:#6B7280;
+
+    margin-bottom:25px;
+
+    font-size:15px;
+
+    line-height:1.5;
+
+}
+
+.customer-details label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    margin-top:18px;
+
+    font-weight:600;
+
+    color:#374151;
+
+}
+
+.customer-details input{
+
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #D1D5DB;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+    transition:0.3s ease;
+
+}
+
+.customer-details input:focus{
+
+    outline:none;
+
+    border-color:#64748B;
+
+    box-shadow:0 0 0 3px rgba(100,116,139,0.15);
+
+}
