@@ -1,19 +1,24 @@
 <?php
     class bookingController{
         /*
-            behaviors within this controller: 
+           behaviors within this controller:
             -> validate input
-            -> check for machine availability
-            -> check for slot availability
+            -> check for slot availability (only future slots where start_time >= current time)
+            -> check for machine availability (machine_status = available)
+            -> check consecutive slot availability if duration_slots = 2 (Heavy Wash)
             -> create customer if they don't exist
-            -> fetch service (price + duration)
-            -> Derive manager_id
-            -> Calculate total_price
-            -> Calculate machine_free_at (start time + service duration)
-            -> Generate booking_reference
-            -> Set initial status
-            -> Begin transaction (create booking object) → insert booking → update machine's free_at → commit
-            -> Return confirmation to booking page
+            -> fetch service (price + duration_minutes + duration_slots)
+            -> derive manager_id
+            -> calculate total_price
+            -> generate booking_reference
+            -> set initial status to Pending
+            -> begin transaction
+                -> insert booking record
+                -> if duration_slots = 2, insert second booking record for consecutive slot
+                -> update machine status to in_use
+            -> commit transaction
+            -> send confirmation email
+            -> return confirmation to booking page
 
 
 
