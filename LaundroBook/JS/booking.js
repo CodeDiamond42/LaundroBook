@@ -1,266 +1,162 @@
+document.addEventListener("DOMContentLoaded", function () {
 
-/* ==========================================================
-                    LAUNDROBOOK BOOKING
+    const form = document.getElementById("bookingForm");
+    const bookingBtn = document.getElementById("booking_button");
+    const confirmBtn = document.getElementById("confirmBookingBtn");
+    const validationMessage = document.getElementById("validationMessage");
+    const collectionMethod = document.getElementById("collection_method");
+    const addressSection = document.getElementById("addressSection");
+    const availabilitySection = document.getElementById("availabilitySection");
 
-Purpose:
-Handles all client-side functionality for the
-booking page.
+    // =========================================================
+    // SHOW/HIDE DELIVERY ADDRESS
+    // =========================================================
+    collectionMethod.addEventListener("change", function () {
+        if (this.value === "delivery") {
+            addressSection.classList.remove("hidden");
+        } else {
+            addressSection.classList.add("hidden");
+        }
+    });
 
-Functions:
-1. Show/Hide delivery address
-2. Validate customer information
-3. Validate booking information
-4. Populate booking summary
-5. Display booking summary
-6. Submit booking to PHP (Future Backend)
+    // =========================================================
+    // BOOK NOW - CLIENT-SIDE VALIDATION
+    //
+    // If validation passes, reveal the availability section.
+    // Price and duration are left empty for PHP to populate
+    // from the Service table using wash_type + load_type.
+    // =========================================================
+    bookingBtn.addEventListener("click", function () {
+        const errors = [];
 
-========================================================== */
+        // --- CUSTOMER INFORMATION ---
 
+        const name = document.getElementById("customer_name").value.trim();
+        if (!name) {
+            errors.push("Full name is required.");
+        } else if (name.length < 2) {
+            errors.push("Full name must be at least 2 characters.");
+        }
 
-/* ==========================================================
-                    FORM ELEMENTS
-========================================================== */
+        const email = document.getElementById("customer_email").value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) {
+            errors.push("Email address is required.");
+        } else if (!emailRegex.test(email)) {
+            errors.push("Please enter a valid email address.");
+        }
 
-const bookingForm = document.getElementById("bookingForm");
+        // Phone - NUMBERS ONLY
+        const phone = document.getElementById("customer_phone").value.trim();
+        const phoneRegex = /^[0-9]+$/;
+        if (!phone) {
+            errors.push("Phone number is required.");
+        } else if (!phoneRegex.test(phone)) {
+            errors.push("Phone number must contain numbers only (no letters or special characters).");
+        } else if (phone.length < 7 || phone.length > 15) {
+            errors.push("Phone number must be between 7 and 15 digits.");
+        }
 
-const validationMessage = document.getElementById("validationMessage");
+        const customerAddress = document.getElementById("customer_address").value.trim();
+        if (!customerAddress) {
+            errors.push("Home address is required.");
+        }
 
-const bookingSummary = document.getElementById("bookingSummary");
+        // --- BOOKING INFORMATION ---
 
-const bookingButton = document.getElementById("booking_button");
+        const bookingDate = document.getElementById("booking_date").value;
+        if (!bookingDate) {
+            errors.push("Booking date is required.");
+        } else {
+            const selected = new Date(bookingDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (selected < today) {
+                errors.push("Booking date cannot be in the past.");
+            }
+        }
 
-const confirmBookingButton = document.getElementById("confirmBookingBtn");
+        const washType = document.getElementById("wash_type").value;
+        if (!washType) {
+            errors.push("Please select a wash type.");
+        }
 
+        const loadType = document.getElementById("load_type").value;
+        if (!loadType) {
+            errors.push("Please select a load type.");
+        }
 
-/* ==========================================================
-                CUSTOMER INFORMATION
-========================================================== */
+        const collection = collectionMethod.value;
+        if (!collection) {
+            errors.push("Please select a collection method.");
+        }
 
-const customerName = document.getElementById("customer_name");
+        if (collection === "delivery") {
+            const deliveryAddress = document.getElementById("address").value.trim();
+            if (!deliveryAddress) {
+                errors.push("Delivery address is required for home delivery.");
+            }
+        }
 
-const customerEmail = document.getElementById("customer_email");
+        // =========================================================
+        // SHOW ERRORS OR REVEAL AVAILABILITY SECTION
+        // =========================================================
+        if (errors.length > 0) {
+            validationMessage.innerHTML =
+                "<ul>" + errors.map(e => "<li>" + e + "</li>").join("") + "</ul>";
+            validationMessage.classList.add("error");
+            validationMessage.classList.remove("hidden");
+            validationMessage.scrollIntoView({ behavior: "smooth" });
+            availabilitySection.classList.add("hidden");
 
-const customerPhone = document.getElementById("customer_phone");
+        } else {
+            validationMessage.innerHTML = "";
+            validationMessage.classList.remove("error");
+            validationMessage.classList.add("hidden");
 
-/* ==========================================================
-                    BOOKING DETAILS
-========================================================== */
+            // Populate summary with user selections
+            document.getElementById("selectedWashType").textContent =
+                washType.charAt(0).toUpperCase() + washType.slice(1);
+            document.getElementById("selectedLoadType").textContent =
+                loadType.charAt(0).toUpperCase() + loadType.slice(1);
+            document.getElementById("selectedBookingDate").textContent = bookingDate;
+            document.getElementById("selectedCollectionMethod").textContent =
+                collection === "pickup" ? "Self Pickup" : "Home Delivery";
 
+            // Price and Duration are left for PHP to populate
+            // from the Service table. Do not set these in JS.
+            // PHP will query: WHERE wash_type = ? AND load_type = ?
+            // and populate #servicePrice and #serviceDuration.
 
-const bookingDate = document.getElementById("booking_date");
+            // Show availability section
+            availabilitySection.classList.remove("hidden");
+            availabilitySection.scrollIntoView({ behavior: "smooth" });
+        }
+    });
 
-const bookingTime = document.getElementById("booking_time");
+    // =========================================================
+    // CONFIRM BOOKING
+    //
+    // Validates machine and slot selection, then submits
+    // the form to PHP for final processing.
+    // =========================================================
+    confirmBtn.addEventListener("click", function () {
+        const machine = document.getElementById("machineSelect").value;
+        const slot = document.getElementById("slotSelect").value;
 
-const machineNumber = document.getElementById("machine_number");
+        if (!machine || !slot) {
+            validationMessage.innerHTML =
+                "<ul><li>Please select both a washing machine and a time slot.</li></ul>";
+            validationMessage.classList.add("error");
+            validationMessage.classList.remove("hidden");
+            validationMessage.scrollIntoView({ behavior: "smooth" });
+            return;
+        }
 
-const serviceType = document.getElementById("service_type");
-
-const collectionMethod = document.getElementById("collection_method");
-
-const addressSection = document.getElementById("addressSection");
-
-const deliveryAddress = document.getElementById("address");
-
-const specialInstructions = document.getElementById("special_instructions");
-
-/* ==========================================================
-                    BOOKING SUMMARY
-========================================================== */
-
-
-
-const summaryDate =
-document.getElementById("summary-date");
-
-const summaryTime =
-document.getElementById("summary-time");
-
-const summaryMachine =
-document.getElementById("summary-machine");
-
-const summaryService =
-document.getElementById("summary-service");
-
-const summaryCollection =
-document.getElementById("summary-collection");
-
-const summaryInstructions =
-document.getElementById("summary-instructions");
-
-const summaryCost =
-document.getElementById("summary-cost");
-
-/* ==========================================================
-            SHOW / HIDE DELIVERY ADDRESS
-========================================================== */
-
-collectionMethod.addEventListener("change", function(){
-
-    if(this.value === "delivery")
-    {
-        addressSection.classList.remove("hidden");
-        deliveryAddress.setAttribute("required", true);
-    }
-    else
-    {
-        addressSection.classList.add("hidden");
-        deliveryAddress.removeAttribute("required");
-        deliveryAddress.value = "";
-    }
+        // Validation passed - submit form to PHP for booking creation
+        validationMessage.innerHTML = "";
+        validationMessage.classList.add("hidden");
+        form.submit();
+    });
 
 });
-
-/* ==========================================
-        BOOKING FORM SUBMISSION
-========================================== */
-
-bookingForm.addEventListener("submit", function(event){
-	
-console.log("Submit event fired");
-    // Stop the form from submitting
-    event.preventDefault();
-
-    // Clear previous validation message
-    validationMessage.textContent = "";
-
-    // Call validation function
-    if(validateBooking())
-    {
-        populateBookingSummary();
-
-        bookingSummary.classList.remove("hidden");
-
-        bookingButton.classList.add("hidden");
-
-        confirmBookingButton.classList.remove("hidden");
-    }
-
-});
-/* ==========================================
-            VALIDATE BOOKING
-========================================== */
-
-function validateBooking(){
-
-    if(customerName.value.trim() === "")
-    {
-        validationMessage.textContent =
-        "Please enter your full name.";
-
-        return false;
-    }
-
-    if(customerEmail.value.trim() === "")
-    {
-        validationMessage.textContent =
-        "Please enter your email address.";
-
-        return false;
-    }
-
-    if(customerPhone.value.trim() === "")
-    {
-        validationMessage.textContent =
-        "Please enter your phone number.";
-
-        return false;
-    }
-
-    if(branch.value === "")
-    {
-        validationMessage.textContent =
-        "Please select a branch.";
-
-        return false;
-    }
-
-    if(bookingDate.value === "")
-    {
-        validationMessage.textContent =
-        "Please select a booking date.";
-
-        return false;
-    }
-
-    if(bookingTime.value === "")
-    {
-        validationMessage.textContent =
-        "Please select a time slot.";
-
-        return false;
-    }
-
-    if(machineNumber.value === "")
-    {
-        validationMessage.textContent =
-        "Please select a washing machine.";
-
-        return false;
-    }
-
-    if(serviceType.value === "")
-    {
-        validationMessage.textContent =
-        "Please select a laundry service.";
-
-        return false;
-    }
-
-    if(collectionMethod.value === "")
-    {
-        validationMessage.textContent =
-        "Please select a collection method.";
-
-        return false;
-    }
-
-    if(collectionMethod.value === "delivery" &&
-       deliveryAddress.value.trim() === "")
-    {
-        validationMessage.textContent =
-        "Please enter a delivery address.";
-
-        return false;
-    }
-
-    return true;
-
-}
-
-/* ==========================================
-        POPULATE BOOKING SUMMARY
-========================================== */
-
-function populateBookingSummary(){
-
-    summaryBranch.textContent =
-    branch.options[branch.selectedIndex].text;
-
-    summaryDate.textContent =
-    bookingDate.value;
-
-    summaryTime.textContent =
-    bookingTime.options[bookingTime.selectedIndex].text;
-
-    summaryMachine.textContent =
-    machineNumber.options[machineNumber.selectedIndex].text;
-
-    summaryService.textContent =
-    serviceType.options[serviceType.selectedIndex].text;
-
-    summaryCollection.textContent =
-    collectionMethod.options[collectionMethod.selectedIndex].text;
-
-    if(specialInstructions.value.trim() === "")
-    {
-        summaryInstructions.textContent =
-        "None";
-    }
-    else
-    {
-        summaryInstructions.textContent =
-        specialInstructions.value;
-    }
-
-}
-
