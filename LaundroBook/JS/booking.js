@@ -57,11 +57,6 @@ document.addEventListener("DOMContentLoaded", function () {
             errors.push("Phone number must be between 7 and 15 digits.");
         }
 
-        const customerAddress = document.getElementById("customer_address").value.trim();
-        if (!customerAddress) {
-            errors.push("Home address is required.");
-        }
-
         // --- BOOKING INFORMATION ---
 
         const bookingDate = document.getElementById("booking_date").value;
