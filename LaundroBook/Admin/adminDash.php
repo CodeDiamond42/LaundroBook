@@ -67,7 +67,7 @@
     <ul>
 
         <li>
-            <a href="adminDashboard.html" class="active">
+            <a href="adminDash.html" class="active">
                 Dashboard
             </a>
         </li>
