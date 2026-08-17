@@ -128,18 +128,19 @@ document.addEventListener("DOMContentLoaded", function () {
             availabilitySection.scrollIntoView({ behavior: "smooth" });
         }
     });
-
     // =========================================================
     // CONFIRM BOOKING
-    //
-    // Validates machine and slot selection, then submits
-    // the form to PHP for final processing.
+    // type="submit" - browser submits automatically by default.
+    // This only validates machine/slot and blocks submission if
+    // either is missing. No form.submit() needed.
     // =========================================================
     confirmBtn.addEventListener("click", function () {
         const machine = document.getElementById("machineSelect").value;
         const slot = document.getElementById("slotSelect").value;
 
         if (!machine || !slot) {
+            event.preventDefault(); // prevents submission is selection is incomplete
+
             validationMessage.innerHTML =
                 "<ul><li>Please select both a washing machine and a time slot.</li></ul>";
             validationMessage.classList.add("error");
@@ -148,10 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Validation passed - submit form to PHP for booking creation
-        validationMessage.innerHTML = "";
-        validationMessage.classList.add("hidden");
-        form.submit();
+        //if the form is valid -> browser submits form, does not rely on javascript for submission
     });
 
 });
