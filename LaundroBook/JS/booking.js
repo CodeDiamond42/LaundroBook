@@ -8,6 +8,33 @@ document.addEventListener("DOMContentLoaded", function () {
     const addressSection = document.getElementById("addressSection");
     const availabilitySection = document.getElementById("availabilitySection");
 
+    //pricing data (static json, avoiding db calls)
+    let pricingData = null; 
+
+    async function loadPricingData(){
+        if(pricingData) return pricingData;
+
+        try {
+            const response = await fetch("/JS/prices.json"); 
+            //probably unnecessary check since a string can be written to console
+            if(!response.ok) throw new Error(`HTTP ${response.status}`); 
+            pricingData = await response.json(); 
+        } catch (error) {
+            console.error("Failed to load pricing data: ", error); 
+            pricingData = null; 
+        }
+
+        return pricingData; 
+    }
+
+    function getPrice(washType, loadType){
+        if(!pricingData) return undefined; 
+        const key = `${washType}_${loadType}`;
+        return pricingData[key];  
+    }
+
+
+
     // =========================================================
     // SHOW/HIDE DELIVERY ADDRESS
     // =========================================================
