@@ -1,0 +1,30 @@
+This document provides a guideline on how to test the server side validation for the LaundroBook system on your device.
+This is the first iteration of this document, please make updates in future if needed.
+
+Run down:
+The testing will be done with javascript turned off in the browser, this allows the data to pass client side validation.
+
+Please run the web site via localhost with Apachee from the Xampp control pannel turned on.
+
+The "process-booking.php" file is a temporary file and can be removed in the future if needed. It is only used for testing purposes-
+in order to see messages.
+
+
+The actual process:
+
+step 1 - Make sure the form action in the "booking.html" file which is found in the Views folder is set to "../Controllers/process-booking.php" 
+e.g: <form action = "../Controllers/process-booking.php"...>
+
+step 2 - In the same booking file, temporary remove the hidden keyword in the class for the section tag where id = "availabilitySection",
+this will allow the "Confirm booking" button to appear where you can then submit your data. 
+e.g: <section id="availabilitySection" class="availability-section">
+
+step 3 - Open developer tools in the browser of your choosing and disable javascript, if you are using microsoft edge, you can open dev tools by
+clicking Fn then F12 on you keyboard. Once dev tools are open, click Ctrl + Shift + p to open the terminal. Enter "Disable JavaScript".
+
+step 4 - Enter your testing details, when you are done click "Confim booking", you will be routed to the process-booking.php page where server side-
+messages will be disaplayed.
+
+
+Note:
+As of now, there are no time slots or machine numbers to select, error messages will stay for these two selects for now.
