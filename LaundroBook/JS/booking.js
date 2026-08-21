@@ -8,6 +8,33 @@ document.addEventListener("DOMContentLoaded", function () {
     const addressSection = document.getElementById("addressSection");
     const availabilitySection = document.getElementById("availabilitySection");
 
+    //pricing data (static json, avoiding db calls)
+    let pricingData = null; 
+
+    async function loadPricingData(){
+        if(pricingData) return pricingData;
+
+        try {
+            const response = await fetch("../JS/prices.json"); 
+            //probably unnecessary check since a string can be written to console
+            if(!response.ok) throw new Error(`HTTP ${response.status}`); 
+            pricingData = await response.json(); 
+        } catch (error) {
+            console.error("Failed to load pricing data: ", error); 
+            pricingData = null; 
+        }
+
+        return pricingData; 
+    }
+
+    function getPrice(washType, loadType){
+        if(!pricingData) return undefined; 
+        const key = `${washType}_${loadType}`;
+        return pricingData[key];  
+    }
+
+
+
     // =========================================================
     // SHOW/HIDE DELIVERY ADDRESS
     // =========================================================
@@ -26,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Price and duration are left empty for PHP to populate
     // from the Service table using wash_type + load_type.
     // =========================================================
-    bookingBtn.addEventListener("click", function () {
+    bookingBtn.addEventListener("click", async function () {
         const errors = [];
 
         // --- CUSTOMER INFORMATION ---
@@ -93,6 +120,16 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
+        //load price data 
+        await loadPricingData(); 
+        let price; 
+        if(washType && loadType){
+            price = getPrice(washType, loadType); 
+            if(price === undefined){
+                errors.push("Price is not available for the selected wash and load type combination."); 
+            }
+        }
+
         // =========================================================
         // SHOW ERRORS OR REVEAL AVAILABILITY SECTION
         // =========================================================
@@ -118,10 +155,10 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("selectedCollectionMethod").textContent =
                 collection === "pickup" ? "Self Pickup" : "Home Delivery";
 
-            // Price and Duration are left for PHP to populate
-            // from the Service table. Do not set these in JS.
-            // PHP will query: WHERE wash_type = ? AND load_type = ?
-            // and populate #servicePrice and #serviceDuration.
+            // contrary to the comment that was here, we're using JS 
+            // to populate the booking summary, instead of using the db
+            document.getElementById("servicePrice").textContent = `${price.toFixed(2)}`;
+           
 
             // Show availability section
             availabilitySection.classList.remove("hidden");
@@ -155,3 +192,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+/*
+the next source of confusion is the selection of the available machine and time slot
+->should the user (who hasn't been confirmed to be a customer yet) be allowed to 
+make a request that goes straight to the DB?
+
+*/
