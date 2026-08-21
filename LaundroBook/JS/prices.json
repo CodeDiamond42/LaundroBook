@@ -2,11 +2,11 @@
 {
   "quick_clothes": 30.00,
   "quick_towels": 35.00,
-  "quick_bedding": 40.00,
+  "quick_beddings": 40.00,
   "normal_clothes": 40.00,
   "normal_towels": 45.00,
-  "normal_bedding": 50.00,
+  "normal_beddings": 50.00,
   "heavy_clothes": 55.00,
   "heavy_towels": 65.00,
-  "heavy_bedding": 70.00
+  "heavy_beddings": 70.00
 }
