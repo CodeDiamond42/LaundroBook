@@ -35,7 +35,7 @@ CREATE TABLE `booking` (
   `service_id` int(3) NOT NULL,
   `manager_id` int(3) NOT NULL,
   `booking_reference` varchar(50) NOT NULL,
-  `booking_date` timestamp(6) NOT NULL DEFAULT current_timestamp(6),
+  `booking_date` date NOT NULL,
   `total_price` decimal(10,2) NOT NULL,
   `status` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -108,7 +108,7 @@ CREATE TABLE `machine` (
   `machine_id` int(3) NOT NULL,
   `manager_id` int(3) NOT NULL,
   `machine_name` varchar(50) NOT NULL,
-  `machine_status` varchar(50) NOT NULL,
+  `machine_status` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -124,7 +124,7 @@ CREATE TABLE `service` (
   `load_type` varchar(30) NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `duration_minutes` int(3) NOT NULL,
-  `duration_slots` varchar(50) NOT NULL
+  `duration_slots` int(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
