@@ -24,7 +24,7 @@ class CustomerRepo implements CustomerRepoInterface
     }
 
     // Looks up a customer by email. Returns null if no match, since
-    // customer.customer_email is UNIQUE - there can only ever be zero
+    // customer.customer_email is UNIQUE, there can only ever be zero
     // or one result, never more than one.
     public function findByEmail(string $email): ?Customer
     {
@@ -66,7 +66,8 @@ class CustomerRepo implements CustomerRepoInterface
     // existing customer by email if one's already in the system,
     // otherwise creates a new record. This keeps the "no account
     // needed" booking flow working for repeat customers without
-    // creating duplicate customer rows every time they book again.
+    // creating duplicate customer rows every time they book again,
+    // i remember this was one of the issues discussed.
     public function findOrCreate(array $data): Customer
     {
         $existing = $this->findByEmail($data['customer_email']);
