@@ -1,5 +1,3 @@
-
-Process booking test · PHP
 <?php
  
 // This code is used to call the booking controller and display
@@ -9,13 +7,10 @@ Process booking test · PHP
 // dependencies (four repo interfaces + AvailabilityService), since
 // it also handles booking creation now, not just validation. Since
 // this test is only exercising validate_input(), none of the real
-// repository logic actually gets called - so instead of building real
+// repository logic actually gets called, so instead of building real
 // repos (which would need a live database connection), we hand it
 // stub classes that satisfy each interface with harmless fake data.
-// If you're only testing validation here, what these stubs return
-// doesn't matter at all - they just need to exist so PHP's type
-// hints are satisfied and the constructor doesn't reject them.
- 
+
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
 require_once __DIR__ . '/../Services/AvailabilityService.php';
 require_once __DIR__ . '/../Controllers/bookingController.php';
@@ -69,7 +64,7 @@ $serviceRepo = new StubServiceRepo();
  
 $availability = new AvailabilityService($machineRepo, $slotRepo, $bookingRepo);
  
-$controller = new bookingController($machineRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability);
+$controller = new bookingController($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability);
  
 if ($controller->validate_input()) {
     echo "<h2>Validation passed!</h2>";
@@ -84,4 +79,3 @@ if ($controller->validate_input()) {
     }
     echo "</ul>";
 }
- 
