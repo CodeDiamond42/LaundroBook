@@ -10,7 +10,7 @@
 
     SWAP LATER: once MachineRepo/SlotRepo/BookingRepo are wired to a real
     database, change the fetch URL in booking.js from this file to the
-    real AvailabilityController.php (action=check_availability) - the
+    real AvailabilityController.php (action=check_availability), the
     JSON shape below is designed to match exactly, so nothing else in
     booking.js should need to change.
 */
@@ -26,7 +26,7 @@ if (empty($bookingDate)) {
     exit;
 }
 
-// Hardcoded fake machines and slots - pretend machine 2 is fully booked
+// Hardcoded fake machines and slots, pretend machine 2 is fully booked
 // today, and machine 1's slot 2 is taken, so you can watch the select
 // options actually change based on what "duration_slots" gets sent.
 if ($durationSlots === 1) {
@@ -37,8 +37,9 @@ if ($durationSlots === 1) {
         ['machine_id' => 3, 'machine_name' => 'Machine 3', 'slot_id' => 2, 'slot_label' => '08:45 - 09:30'],
         ['machine_id' => 3, 'machine_name' => 'Machine 3', 'slot_id' => 3, 'slot_label' => '09:30 - 10:15'],
     ];
-} else {
-    // Heavy Wash - only combos with a valid consecutive second slot
+} 
+else {
+    // Heavy Wash, only combos with a valid consecutive second slot
     $available = [
         [
             'machine_id' => 3, 'machine_name' => 'Machine 3',
