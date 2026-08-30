@@ -94,9 +94,9 @@ class BookingRepo implements BookingRepoInterface{
         return $result;
     }
  
-    // Every booking needs a manager_id, but there's only ever one
+    // Every booking needs a manager_id, assuming that there is one
     // manager in the system right now, so this just grabs whichever
-    // row happens to exist rather than asking the customer to pick one.
+    // row happens to exist, function is not yet used.
     public function getPrimaryManager(): array
     {
         $result = $this->db->query("SELECT manager_id FROM system_manager LIMIT 1");
