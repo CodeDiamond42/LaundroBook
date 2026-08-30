@@ -27,7 +27,7 @@ class ServiceRepo implements ServiceRepoInterface
         return $stmt;
     }
 
-    // The main lookup - given a wash type ("quick"/"normal"/"heavy")
+    // The main lookup, given a wash type ("quick"/"normal"/"heavy")
     // and a load type ("clothes"/"beddings"/"towels"), finds the
     // matching price and duration. Returns null if the combination
     // doesn't exist, so the caller can show a proper error instead of

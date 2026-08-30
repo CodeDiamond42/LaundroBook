@@ -4,9 +4,9 @@ require_once __DIR__ . '/../Database/Connection.php';
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
 
 // This class has one job: read and write the machine table. It doesn't
-// know anything about slots, bookings, or customers - those all have
+// know anything about slots, bookings, or customers, those all have
 // to be cross-referenced with machines somewhere, but that logic lives
-// in a service (AvailabilityService), not here.
+// in a service (AvailabilityService).
 
 class MachineRepo implements MachineRepoInterface{
     protected mysqli $db;
@@ -54,7 +54,7 @@ class MachineRepo implements MachineRepoInterface{
     }
 
 
-    // Flips a machine's status - e.g. 'available' to 'in_use' once a
+    // Flips a machine's status, e.g. 'available' to 'in_use' once a
     // booking is confirmed. Called by BookingService after a
     // successful insert, and later by the admin panel for manual
     // maintenance toggles. Throws an exception if someone passes a

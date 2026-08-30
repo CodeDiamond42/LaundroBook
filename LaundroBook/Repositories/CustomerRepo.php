@@ -49,7 +49,7 @@ class CustomerRepo implements CustomerRepoInterface
     }
 
     // Inserts a brand new customer row and hands back a Customer object
-    // built with the ID MySQL just generated for it.
+    // built with the ID MySQL generated for it.
     public function createCustomer(string $name, string $email, string $phone, string $address): Customer
     {
         $sql = "INSERT INTO customer (customer_name, customer_email, customer_phone, address)
@@ -64,8 +64,8 @@ class CustomerRepo implements CustomerRepoInterface
 
     // This is the one BookingService actually calls. Reuses an
     // existing customer by email if one's already in the system,
-    // otherwise creates a new record. This keeps the "no account
-    // needed" booking flow working for repeat customers without
+    // otherwise creates a new record. This keeps the
+    // booking flow working for repeat customers without
     // creating duplicate customer rows every time they book again,
     // i remember this was one of the issues discussed.
     public function findOrCreate(array $data): Customer
@@ -75,8 +75,6 @@ class CustomerRepo implements CustomerRepoInterface
             return $existing;
         }
 
-        // UPDATED: falls back to null instead of '' now that
-        // customer.address accepts NULL in the schema.
         return $this->createCustomer(
             $data['customer_name'],
             $data['customer_email'],

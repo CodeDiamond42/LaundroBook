@@ -4,8 +4,8 @@ require_once __DIR__ . '/../Database/Connection.php';
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
 
 // This class has one job: read the slot table. It doesn't know
-// anything about machines, bookings, or customers - cross-referencing
-// slots against those belongs in AvailabilityService, not here.
+// anything about machines, bookings, or customers, cross-referencing
+// slots against those belongs in AvailabilityService.
 
 class SlotRepo implements SlotRepoInterface{
     private mysqli $db;
@@ -24,7 +24,7 @@ class SlotRepo implements SlotRepoInterface{
     }
 
     // Returns every slot the manager hasn't deactivated, ordered by
-    // start_time. That ordering matters - AvailabilityService relies
+    // start_time. That ordering matters, AvailabilityService relies
     // on the slots coming back in time order to figure out which slot
     // comes "next" when checking Heavy Wash bookings (which need two
     // slots in a row).
