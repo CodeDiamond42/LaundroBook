@@ -2,18 +2,12 @@
  
 // This code is used to call the booking controller and display
 // the errors found within the errors array in the booking controller.
-//
-// UPDATED: bookingController's constructor now requires five
-// dependencies (four repo interfaces + AvailabilityService), since
-// it also handles booking creation now, not just validation. Since
-// this test is only exercising validate_input(), none of the real
-// repository logic actually gets called, so instead of building real
-// repos (which would need a live database connection), we hand it
-// stub classes that satisfy each interface with harmless fake data.
+
 
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
 require_once __DIR__ . '/../Services/AvailabilityService.php';
 require_once __DIR__ . '/../Controllers/bookingController.php';
+require_once __DIR__ . '/../Services/BookingService.php';
  
 class StubMachineRepo implements MachineRepoInterface
 {
@@ -63,8 +57,8 @@ $bookingRepo = new StubBookingRepo();
 $serviceRepo = new StubServiceRepo();
  
 $availability = new AvailabilityService($machineRepo, $slotRepo, $bookingRepo);
- 
-$controller = new bookingController($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability);
+$bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability);
+$controller = new bookingController($bookingService);
  
 if ($controller->validate_input()) {
     echo "<h2>Validation passed!</h2>";
