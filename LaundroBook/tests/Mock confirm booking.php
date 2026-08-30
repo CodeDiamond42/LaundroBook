@@ -2,19 +2,19 @@
 /*
     Mock confirm booking.php
 
-    Full stand-in for bookingController's real wiring, using stub
+    Full stand-in for bookingControllers real wiring, using stub
     repositories, exercises the ENTIRE confirmBooking() flow
     (validation, price lookup, availability re-check, the
     "transaction", customer/booking creation, and now the receipt
     lookups for machine name and slot label) with zero real database
     connection. Nothing here ever calls Connection::getConnection().
 
-    HOW TO USE: temporarily point your booking form's action at this
+    HOW TO USE: temporarily point your booking form action at this
     file instead of the real bookingController.php:
 
         <form action="../tests/Mock confirm booking.php" ...>
 
-    Submit the form as normal. On "success" it'll redirect to
+    Submit the form as normal. On "success" it will redirect to
     BookingConfirm.php exactly like the real flow would, with fake but
     complete receipt data. Switch the form action back to
     bookingController.php once you're ready to test against a real
@@ -22,14 +22,17 @@
     the exact same bookingController class with the same constructor
     shape, just with fake dependencies instead of real ones.
 
+    
 */
 
 require_once __DIR__ . '/../Controllers/bookingController.php';
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
 require_once __DIR__ . '/../Services/AvailabilityService.php';
+require_once __DIR__ . '/../Services/BookingService.php';
 
 class StubMachineRepo implements MachineRepoInterface
 {
+    
     private array $machines = [
         1 => ['machine_id' => 1, 'machine_name' => 'Machine 1', 'machine_status' => 'available'],
         3 => ['machine_id' => 3, 'machine_name' => 'Machine 3', 'machine_status' => 'available'],
@@ -52,6 +55,7 @@ class StubMachineRepo implements MachineRepoInterface
 
 class StubSlotRepo implements SlotRepoInterface
 {
+    
     private array $slots = [
         1 => ['slot_id' => 1, 'slot_label' => '08:00 - 08:45', 'start_time' => '08:00', 'end_time' => '08:45', 'is_active' => 1],
         2 => ['slot_id' => 2, 'slot_label' => '08:45 - 09:30', 'start_time' => '08:45', 'end_time' => '09:30', 'is_active' => 1],
@@ -132,5 +136,9 @@ $bookingRepo = new StubBookingRepo();
 $serviceRepo = new StubServiceRepo();
 
 $availability = new AvailabilityService($machineRepo, $slotRepo, $bookingRepo);
-$controller = new bookingController($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability);
+$bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability);
+
+// bookingController takes one BookingService
+
+$controller = new bookingController($bookingService);
 $controller->confirmBooking();
