@@ -14,6 +14,16 @@ if (session_status() === PHP_SESSION_NONE) {
 $bookingErrors = $_SESSION['booking_errors'] ?? [];
 unset($_SESSION['booking_errors']);
 
+// Clears any leftover receipt data from a previous confirmed booking.
+unset(
+    $_SESSION['booking_reference'], $_SESSION['customer_email'],
+    $_SESSION['customer_name'], $_SESSION['booking_date'],
+    $_SESSION['wash_type'], $_SESSION['load_type'],
+    $_SESSION['duration_minutes'], $_SESSION['machine_name'],
+    $_SESSION['slot_label'], $_SESSION['second_slot_label'],
+    $_SESSION['collection_method'], $_SESSION['delivery_address']
+);
+
 $hasErrors = !empty($bookingErrors);
 
 // Builds the exact same markup structure booking.js already generates
