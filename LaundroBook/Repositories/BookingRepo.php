@@ -21,19 +21,19 @@ class BookingRepo implements BookingRepoInterface{
     {
         $stmt = $this->db->prepare($sql);
         if ($types !== '') {
-            $stmt->bind_param($types, ...$params); //uses spread/splat operator (...) to unpack array into individual arguments
+            $stmt->bind_param($types, ...$params); //uses spread/splat operator '...' to unpack array into individual arguments
         }
         $stmt->execute();
         return $stmt;
     }
 
-    // Creates a new booking row. Status always starts as 'Pending' -
+    // Creates a new booking row. Status always starts as 'Pending',
     // nothing here decides otherwise. Returns the new booking's ID so
     // whoever called this can generate a reference number, insert a
     // second row for Heavy Wash, etc.
     public function insert(int $customerId, int $managerId, array $service, array $data): int
     {
-        // Reference gets written properly further down - this is just
+        // Reference gets written properly further down, this is just
         // a placeholder so the column isn't left blank while we insert.
         $placeholderRef = 'PENDING';
  
@@ -53,12 +53,12 @@ class BookingRepo implements BookingRepoInterface{
         ]);
  
         // insert_id is the auto-increment value MySQL just generated
-        // for this row - this is how we find out the new booking_id.
+        // for this row, this is how we find out the new booking_id.
         $bookingId = $stmt->insert_id;
         $stmt->close();
  
         // The reference (e.g. LB-00001) needs the real booking_id,
-        // which only exists after the row is inserted - so it can't be
+        // which only exists after the row is inserted, so it can't be
         // included in the first INSERT above. This runs a quick second
         // query right after to fill it in.
         $reference = 'LB-' . str_pad((string)$bookingId, 5, '0', STR_PAD_LEFT);
@@ -69,7 +69,7 @@ class BookingRepo implements BookingRepoInterface{
 
     // Fills in the real booking_reference after insert(). Kept private
     // since nothing outside this class should ever need to update a
-    // reference on its own - it's only ever a follow-up step to insert().
+    // reference on its own, it's only ever a follow-up step to insert().
     private function updateReference(int $bookingId, string $reference): void
     {
         $sql = "UPDATE booking SET booking_reference = ? WHERE booking_id = ?";
@@ -95,7 +95,7 @@ class BookingRepo implements BookingRepoInterface{
     }
  
     // Every booking needs a manager_id, but there's only ever one
-    // manager in the system right now - so this just grabs whichever
+    // manager in the system right now, so this just grabs whichever
     // row happens to exist rather than asking the customer to pick one.
     public function getPrimaryManager(): array
     {
