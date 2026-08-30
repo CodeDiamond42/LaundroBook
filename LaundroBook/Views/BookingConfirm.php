@@ -11,13 +11,22 @@
     email and personal details out of the address bar/browser history.
 
     htmlspecialchars() is used on every value before its echoed,
-    session data originated from user-submitted form input
+    session data originated from user-submitted form input 
 */
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 $bookingReference = $_SESSION['booking_reference'] ?? null;
+
+
+// sends users back to the booking form instead of showing a fake "confirmed"
+// receipt with placeholder values.
+if ($bookingReference === null) {
+    header('Location: booking.php');
+    exit;
+}
+
 $customerEmail = $_SESSION['customer_email'] ?? null;
 $customerName = $_SESSION['customer_name'] ?? null;
 $bookingDate = $_SESSION['booking_date'] ?? null;
@@ -30,23 +39,14 @@ $secondSlotLabel = $_SESSION['second_slot_label'] ?? null;
 $collectionMethod = $_SESSION['collection_method'] ?? null;
 $deliveryAddress = $_SESSION['delivery_address'] ?? null;
 
-// This is cleared after reading so refreshing this page, or someone else on the
-// same browser/session later, does not keep seeing the same bookings
-// details indefinitely.
-unset(
-    $_SESSION['booking_reference'], $_SESSION['customer_email'],
-    $_SESSION['customer_name'], $_SESSION['booking_date'],
-    $_SESSION['wash_type'], $_SESSION['load_type'],
-    $_SESSION['duration_minutes'], $_SESSION['machine_name'],
-    $_SESSION['slot_label'], $_SESSION['second_slot_label'],
-    $_SESSION['collection_method'], $_SESSION['delivery_address']
-);
 
 // If someone lands on this page directly (bookmarked it, refreshed
 // after the session values were already cleared) rather than
 // arriving via a real redirect, there's no booking to actually
 // confirm, status reflects that instead of falsely claiming "Confirmed".
-$bookingStatus = $bookingReference ? 'Confirmed' : 'No booking found';
+// The redirect guard above already ensures $bookingReference exists
+// by this point, so status is always genuinely Confirmed here
+$bookingStatus = 'Confirmed';
 
 // Service type combines wash + load into one readable line, e.g.
 // "Heavy Wash - Beddings" instead of two separate raw values.
@@ -61,7 +61,7 @@ if ($secondSlotLabel) {
     $slotTimes = $slotLabel . ' & ' . $secondSlotLabel;
 }
 
-$bookingReference = $bookingReference ? htmlspecialchars($bookingReference, ENT_QUOTES, 'UTF-8') : 'LB-XXXX';
+$bookingReference = htmlspecialchars($bookingReference, ENT_QUOTES, 'UTF-8');
 $customerEmail = $customerEmail ? htmlspecialchars($customerEmail, ENT_QUOTES, 'UTF-8') : 'Not Available';
 $customerName = $customerName ? htmlspecialchars($customerName, ENT_QUOTES, 'UTF-8') : 'Not Available';
 $bookingDate = $bookingDate ? htmlspecialchars($bookingDate, ENT_QUOTES, 'UTF-8') : 'Not Available';
