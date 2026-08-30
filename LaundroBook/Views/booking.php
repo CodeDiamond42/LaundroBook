@@ -241,7 +241,7 @@ if ($hasErrors) {
                                 <option value="">Select an available time slot</option>
                             </select>
                         </div>
-
+                        <input type="hidden" id="secondSlotId" name="second_slot_id" value="">
                     </div>
 
                     <!-- Collection Method Display -->
