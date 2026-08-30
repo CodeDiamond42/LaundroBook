@@ -112,6 +112,13 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Copies second_slot_id off the selected options data attribute into
+    // a real form field,
+    slotSelect.addEventListener("change", function () {
+        const selectedOption = this.options[this.selectedIndex];
+        document.getElementById("secondSlotId").value = selectedOption.dataset.secondSlotId || "";
+    });
+
     // ADDED: filters slotSelect down to whichever machine was picked.
     // second_slot_id (Heavy Wash only) is stashed on the option so
     // Confirm Booking can read it back without a second lookup.
