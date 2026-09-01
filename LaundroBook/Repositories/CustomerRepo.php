@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../Database/Connection.php';
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
-require_once __DIR__ . '/../Models/Models.php';
+require_once __DIR__ . '/../Models/Customer.php';
 
 class CustomerRepo implements CustomerRepoInterface
 {

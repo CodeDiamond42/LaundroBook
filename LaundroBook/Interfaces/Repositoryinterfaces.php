@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../Models/Models.php';
+require_once __DIR__ . '/../Models/Customer.php';
 
 
 interface MachineRepoInterface{
