@@ -5,3 +5,7 @@ Config/EmailConfig.php
 # Temporary diagnostic script used only for testing email in isolation -
 # not part of the real project, safe to ignore if it still exists locally.
 tests/test-email.php
+
+
+#Latest project export stored locally for demonstration.
+db-Exports/laundrobook.sql
