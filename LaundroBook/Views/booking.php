@@ -78,7 +78,7 @@ if ($hasErrors) {
             </nav>
 
             <div class="nav-buttons">
-                <a href="TrackingOrder.php" id= "track-pickup-btn" class=" btn btn-primary">Track Order Progress</a>
+                <a href="TrackingOrder.php" id= "track-pickup-btn" class=" btn btn-primary">Track Order</a>
             </div>
         </div>
     </header>
